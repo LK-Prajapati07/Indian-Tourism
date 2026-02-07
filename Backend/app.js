@@ -1,7 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
+
+import { ENV } from './Src/config/env.js';
+import { connectDB } from './Src/config/DB.js';
+
 dotenv.config();
 
 const app = express();
@@ -10,6 +13,9 @@ app.use(cookieParser());
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
+app.listen(ENV.PORT, () => {
+
+    console.log(`Server is running on port http://localhost:${ENV.PORT}`);
+    connectDB();
+    
 });
