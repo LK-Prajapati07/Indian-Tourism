@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const service = new mongoose.Schema({
     serviceName: {
-        type: String,
+        type: String, 
         required: true,
         enum: ['hotel', 'transportation', 'tour guide']
     },

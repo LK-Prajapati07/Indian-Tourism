@@ -28,12 +28,13 @@ const serviceProviderModel = new mongoose.Schema({
         default: "inactive",
     },
     userRef: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, 
         ref: "User",
         required: true
     }
+    
 
-
-}
-    , { timestamps: true, })
+},
+     { timestamps: true, }
+)
 export const ServiceProvider = mongoose.model("ServiceProvider", serviceProviderModel);
