@@ -1,38 +1,54 @@
-import { Destination } from "./destination";
+import mongoose from "mongoose";
 
 const bookingModel = new mongoose.Schema({
-    userRef:{
+    userRef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',},
-        serviceRf:{
+        ref: 'User',
+        required: true,
+    },
+    serviceRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Service',
-        required:true,
-        },
-        destinationRef:{
+        required: true,
+    },
+    destinationRef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Destination,
+        ref: 'Destination',
+        required: true,
     },
-    travelDates:{
-        type:Date,
-        default:Date.now,
-    },
-    quintity:{
-        type:Number,
-        required:true,},
-    totalPrice:{
-        type:Number,
-        required:true,},
-    bookingStatus:{
-        type:String,
-        enum:["pending","confirmed","cancelled"],
-        default:"pending",
-    },
-    bookingDate:{
-        type:Date,
-        default:Date.now,
+    travelDates: {
+      startDate: {
+        type: Date,
+        required: true,
+      },
+      endDate: {
+        type: Date,
+        required: true,
+        validate: {
+          validator: function (value) {
+            return value > this.travelDates.startDate;
+          },
+          message: "endDate must be after startDate",
+        },
+      },
     }
+    ,
+    quantity: {
+        type: Number,
+        required: true,
+        min: 1,
+    },
+    totalPrice: {
+        type: Number,
+        required: true,
+    },
+    bookingStatus: {
+        type: String,
+        enum: ["pending", "confirmed", "cancelled", "completed"],
+        default: "pending",
+    },
+
 },
-    {timestamps:true,}
+    { timestamps: true, }
 )
 export const Booking = mongoose.model("Booking", bookingModel);

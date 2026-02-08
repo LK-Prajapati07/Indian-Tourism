@@ -1,4 +1,6 @@
-const DestinationSchema = new mongoose.Schema(
+import mongoose from "mongoose";
+
+const destinationSchema = new mongoose.Schema(
   {
     destinationName: {
       type: String,
@@ -7,6 +9,11 @@ const DestinationSchema = new mongoose.Schema(
     },
 
     state: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    city:{
       type: String,
       required: true,
       trim: true
@@ -51,4 +58,4 @@ const DestinationSchema = new mongoose.Schema(
   }
 );
 
-export const Destination = mongoose.model("Destination", DestinationSchema);
+export const Destination = mongoose.model("Destination", destinationSchema);
