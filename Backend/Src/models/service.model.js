@@ -1,4 +1,5 @@
-import { Destination } from "./destination";
+import mongoose from "mongoose";
+
 
 const service = new mongoose.Schema({
     serviceName: {
@@ -8,7 +9,7 @@ const service = new mongoose.Schema({
     },
     destinationRef: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: Destination,
+        ref: 'Destination',
         required: true
     },
     providerRef: {
@@ -25,19 +26,21 @@ const service = new mongoose.Schema({
         enum:["rooms","seats","vehicles"],
         default:"rooms",
     },
+    capacity:{
+        type:Number,
+        required:true,
+        min:1,
+    },
     serviceStatus:{
         type:String,
         enum:["active","inactive"],
         default:"inactive",
     },
-    mediaUrl:{
+    mediaUrl:[{
         type:String,
 
-    },
-    created:{
-        type:Date,
-        default:Date.now,
-    }
+    }],
+    
 },
 {    timestamps:true,}
 )
