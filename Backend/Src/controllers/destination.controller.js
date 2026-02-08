@@ -1,5 +1,5 @@
 import { Destination } from "../models/destination.js";
-import cloudinary from "../config/cloudinaryConfig.js";
+import cloudinary from "../config/cloudinary.js";
 export const createDestination = async (req, res) => {
     try {
         const { destinationName, state, city, category, description, bestTimeToVisit, } = req.body;

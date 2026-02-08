@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRoutes from './Src/routes/auth.route.js';
+import destinationRoute from './Src/routes/destination.route.js'
 
 import { ENV } from './Src/config/env.js';
 import { connectDB } from './Src/config/DB.js';
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 app.use("/api/auth", authRoutes);
-// app.use("/api/destinations", destinationRoutes);
+app.use("/api/destinations", destinationRoute);
 // app.use("/api/providers", serviceProviderRoutes);
 // app.use("/api/services", serviceRoutes);
 // app.use("/api/bookings", bookingRoutes);
