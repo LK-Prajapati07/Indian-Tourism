@@ -6,6 +6,8 @@ import destinationRoute from './Src/routes/destination.route.js'
 
 import { ENV } from './Src/config/env.js';
 import { connectDB } from './Src/config/DB.js';
+import serviceProviderRoute from './Src/routes/serviceProvider.route.js';
+import serviceRoute from './Src/routes/service.route.js';
 
 dotenv.config();
 
@@ -18,8 +20,8 @@ app.get('/', (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoute);
-// app.use("/api/providers", serviceProviderRoutes);
-// app.use("/api/services", serviceRoutes);
+app.use("/api/providers", serviceProviderRoute);
+app.use("/api/services", serviceRoute);
 // app.use("/api/bookings", bookingRoutes);
 // app.use("/api/payments", paymentRoutes);
 // app.use("/api/reviews", reviewRoutes);

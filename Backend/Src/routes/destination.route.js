@@ -9,7 +9,7 @@ destinationRoute.get("/",getAllDestinations)
 destinationRoute.get('/:id',getDestinationById)
 //admin  router
 destinationRoute.post("/",authenticate,isAdmin,upload.single("images"),createDestination)
-destinationRoute.put("/:id",authenticate,isAdmin,updateDestination)
+destinationRoute.put("/:id",authenticate,isAdmin,upload.single("images"),updateDestination)
 destinationRoute.delete("/:id",authenticate,isAdmin,deleteDestination)
 
 export default destinationRoute
