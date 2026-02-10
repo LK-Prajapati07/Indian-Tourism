@@ -50,6 +50,8 @@ Stripe	Payments
 Cloudinary	Image/Media storage
 Multer	File uploads
 📁 Backend Folder Structure
+
+
 backend/
 │
 ├── src/
