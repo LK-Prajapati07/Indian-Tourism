@@ -84,4 +84,37 @@ export const deleteService = async (req, res) => {
         res.status(500).json({ error: "An error occurred while deleting the service." });
     }
 }
+export const updataServiceStatus=async (req,res)=>{
+    try {
+        const {serviceId}=req.params
+        const {status}=req.body
+        if(!["active","inactive"].includes(status)){
+            return res.status(400).json({
+                message:"invalid status "
+            })
+        }
+        const service=await Service.findByIdAndUpdate(
+            serviceId,
+            {
+                serviceStatus:status
+            },
+            {new:true}
+        )
+        if(!service){
+            return res.status(404).json({
+                message:"Service not found"
+            })
+        }
+        res.status(200).json({
+            success:true,
+            message:`Service ${status==="active"?"approvad":"disabled"}`,
+            service
+        })
 
+    } catch (error) {
+        console.log("Error Createing Update ServiceStatus")
+        res.status(500).json({
+            message:"Service Approval Failed"
+        })
+    }
+}

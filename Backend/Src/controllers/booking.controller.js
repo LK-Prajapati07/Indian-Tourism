@@ -197,3 +197,34 @@ export const cancelBooking = async (req, res) => {
     });
   }
 };
+
+
+export const adminUpdateBookingStatus = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { status } = req.body; // cancelled | completed
+
+    if (!["cancelled", "completed"].includes(status)) {
+      return res.status(400).json({ message: "Invalid booking status" });
+    }
+
+    const booking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { bookingStatus: status },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Booking marked as ${status}`,
+      booking
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Booking update failed" });
+  }
+};

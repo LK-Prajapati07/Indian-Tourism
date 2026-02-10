@@ -1,4 +1,5 @@
 import { ServiceProvider } from "../models/serviceProvider.model.js";
+import { User } from "../models/user.models.js";
 
 export const createServiceProvider = async (req, res) => {
     try {
@@ -35,4 +36,39 @@ export const getServiceProviders = async (req, res) => {
         console.error("Error fetching service providers:", error);
         res.status(500).json({ message: "Error fetching service providers", error });
     }
+};
+
+
+
+export const approveServiceProvider = async (req, res) => {
+  try {
+    const { providerId } = req.params;
+    const { status } = req.body; // active | blocked
+
+    if (!["active", "blocked"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const provider = await ServiceProvider.findById(providerId);
+    if (!provider) {
+      return res.status(404).json({ message: "Service provider not found" });
+    }
+
+    provider.accountStatus = status;
+    provider.adminApproved = status === "active";
+    await provider.save();
+
+    await User.findByIdAndUpdate(provider.userRef, {
+      accountStatus: status
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Service provider ${status}`,
+      provider
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Approval failed" });
+  }
 };
