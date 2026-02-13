@@ -11,10 +11,15 @@ import serviceRoute from './Src/routes/service.route.js';
 import bookingRoute from './Src/routes/booking.route.js';
 import paymentRoute from './Src/routes/payment.route.js';
 import reviewRoute from './Src/routes/review.route.js';
+import cors from 'cors'
 
 dotenv.config();
 
 const app = express();
+app.use(cors({
+    origin:ENV.FRONTEND_URL,
+    credentials:true
+}))
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
