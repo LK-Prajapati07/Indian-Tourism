@@ -4,5 +4,14 @@ const API=axios.create({
     withCredentials:true
 })
 export const loginUser=(payload)=>{
-    API.post()
+    API.post("/auth/login",payload)
+}
+export const registerUser=(payload)=>{
+    API.post("/auth/register",payload)
+}
+export const fetchCurrentUser=()=>{
+    API.get("/auth/me");
+}
+export const logoutUser=()=>{
+    API.post("/auth/logout")
 }

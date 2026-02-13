@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { fetchCurrentUser } from "./API/authApi";
+import { logoutUser, setLoading, setUser } from "./Store/authSlice";
+
+
+import AuthRoutes from "./Routes/AuthRoutes";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  useEffect(() => {
+    const restoreSession = async () => {
+      dispatch(setLoading());
+
+      try {
+        const response = await fetchCurrentUser();
+        dispatch(setUser(response.data.user));
+      } catch (error) {
+        dispatch(logoutUser());
+      }
+    };
+
+    restoreSession();
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center text-lg font-medium">
+        Loading...
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    );
+  }
+
+  return <AuthRoutes />;
 }
 
-export default App
+export default App;
