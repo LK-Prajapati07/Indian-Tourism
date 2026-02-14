@@ -1,6 +1,6 @@
-import Home from "@/auth/Home";
-import Login from "@/auth/Login";
-import Register from "@/auth/Register";
+import Home from "@/pages/auth/Home";
+import Login from "@/pages/auth/Login";
+import Register from "@/pages/auth/Register";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 
