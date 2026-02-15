@@ -1,40 +1,42 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchCurrentUser } from "./API/authApi";
+import { fetchCurrentUser } from "@/API/authApi";
+import AppRoutes from "@/routes/AppRoutes";
 import { logoutUser, setLoading, setUser } from "./Store/authSlice";
-
-
-import AuthRoutes from "./Routes/AuthRoutes";
 
 function App() {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const restoreSession = async () => {
-      dispatch(setLoading());
-
+    const restoreUser = async () => {
       try {
+        dispatch(setLoading());
+
         const response = await fetchCurrentUser();
-        dispatch(setUser(response.data.user));
+
+        // IMPORTANT: correct data extraction
+        const user = response.data.user;
+
+        dispatch(setUser(user));
       } catch (error) {
         dispatch(logoutUser());
       }
     };
 
-    restoreSession();
+    restoreUser();
   }, [dispatch]);
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-lg font-medium">
+      <div className="h-screen flex items-center justify-center">
         Loading...
       </div>
     );
   }
 
-  return <AuthRoutes />;
+  return <AppRoutes />;
 }
 
 export default App;
