@@ -1,11 +1,14 @@
 import express from 'express'
 import { authenticate } from "../middleware/authentication.js"
 import { isAdmin, isServiceProvider } from "../middleware/authorization.js"
-import { approveServiceProvider, createServiceProvider, getServiceProviders } from "../controllers/serviceProvider.controller.js"
+import { applyProvider, approveProvider, getMyProviderProfile, getServiceProviders, rejectProvider} from "../controllers/serviceProvider.controller.js"
 const serviceProviderRoute=express.Router()
 //Service Provider Route
-serviceProviderRoute.post("/",authenticate,isServiceProvider,createServiceProvider)
+serviceProviderRoute.post("/",authenticate,isServiceProvider,applyProvider)
+serviceProviderRoute.get('/me',authenticate,isServiceProvider,getMyProviderProfile)
 //Admin Routes
 serviceProviderRoute.get("/",authenticate,isAdmin,getServiceProviders)
-serviceProviderRoute.put("/adminServiceProvider",authenticate,isAdmin,approveServiceProvider)
+serviceProviderRoute.patch("/approve/:id",authenticate,isAdmin,approveProvider)
+serviceProviderRoute.patch('/reject/:id',authenticate,isAdmin,rejectProvider)
+
 export default serviceProviderRoute

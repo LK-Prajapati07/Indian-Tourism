@@ -25,7 +25,7 @@ export const RequireActiveAccount = () => {
   const { user } = useSelector((state) => state.auth);
 
   if (user?.accountStatus !== "active") {
-    return <Navigate to="/pending-approval" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

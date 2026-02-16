@@ -1,7 +1,7 @@
 import { ServiceProvider } from "../models/serviceProvider.model.js";
 import { User } from "../models/user.models.js";
 
-export const createServiceProvider = async (req, res) => {
+export const applyProvider = async (req, res) => {
     try {
         const { serviceProviderName, serviceProviderEmail, serviceProviderPhone, serviceType } = req.body;
       
@@ -37,10 +37,30 @@ export const getServiceProviders = async (req, res) => {
         res.status(500).json({ message: "Error fetching service providers", error });
     }
 };
+export const getMyProviderProfile = async (req, res) => {
+  try {
+    const provider = await ServiceProvider.findOne({
+      userRef: req.user._id,
+    }).populate("userRef", "fullName email");
+
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: "Provider profile not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: provider,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 
-
-export const approveServiceProvider = async (req, res) => {
+export const approveProvider = async (req, res) => {
   try {
     const { providerId } = req.params;
     const { status } = req.body; // active | blocked
@@ -70,5 +90,30 @@ export const approveServiceProvider = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: "Approval failed" });
+  }
+};
+
+export const rejectProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const provider = await ServiceProvider.findById(id);
+    if (!provider) {
+      return res.status(404).json({ success: false, message: "Not found" });
+    }
+
+    provider.accountStatus = "rejected";
+    await provider.save();
+
+    await User.findByIdAndUpdate(provider.userRef, {
+      accountStatus: "blocked",
+    });
+
+    res.json({
+      success: true,
+      message: "Provider rejected",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

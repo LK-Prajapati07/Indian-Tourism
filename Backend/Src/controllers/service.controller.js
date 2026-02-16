@@ -118,3 +118,20 @@ export const updataServiceStatus=async (req,res)=>{
         })
     }
 }
+export const getMyServices = async (req, res) => {
+  try {
+    const services = await Service.find({
+      providerRef: req.user._id,
+    }).populate("destinationRef", "destinationName state");
+
+    res.json({
+      success: true,
+      data: services,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

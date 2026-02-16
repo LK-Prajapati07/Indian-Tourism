@@ -1,4 +1,4 @@
-import { fetchCurrentUser, loginUser } from "@/API/authApi";
+import { fetchCurrentUser, loginUser, registerUser } from "@/API/authApi";
 import { setUser } from "@/Store/authSlice";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -11,33 +11,45 @@ export const useAuth = () => {
 
   return useMutation({
     mutationFn: loginUser,
+
     onSuccess: async () => {
       try {
         const profileResponse = await fetchCurrentUser();
 
-        const user = profileResponse.user; // ✅ FIXED
+        const user = profileResponse?.user;
+
+        if (!user) {
+          throw new Error("Invalid profile response");
+        }
 
         dispatch(setUser(user));
 
         toast.success("Login Successful");
 
         if (user.role === "admin") {
-          navigate("/admin/dashboard");
-        } else if (user.role === "serviceProvider") {
-          navigate("/provider/dashboard");
-        } else {
-          navigate("/");
+          navigate("/admin/dashboard", { replace: true });
+        } 
+        else if (user.role === "serviceProvider") {
+          navigate("/provider/dashboard", { replace: true });
+        } 
+        else {
+          navigate("/", { replace: true });
         }
+
       } catch (error) {
-        console.error("Profile fetch failed", error);
+        console.error("Profile fetch failed:", error);
         toast.error("Failed to load user profile");
       }
     },
+
     onError: (err) => {
-      toast.error(err.response?.data?.message || "Invalid Credentials");
+      toast.error(
+        err?.response?.data?.message || "Invalid Credentials"
+      );
     },
   });
 };
+
 export const useRegister = () => {
   const navigate = useNavigate();
   return useMutation({
